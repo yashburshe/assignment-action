@@ -10,7 +10,15 @@ async function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-async function retryWithExponentialBackoff<T>(
+export class NonRetriableError extends Error {
+  constructor(message: string, cause?: Error) {
+    super(message)
+    this.name = 'Error'
+    this.cause = cause
+  }
+}
+
+export async function retryWithExponentialBackoff<T>(
   operation: () => Promise<T>,
   maxRetries: number = 5,
   baseDelay: number = 1000
@@ -22,6 +30,11 @@ async function retryWithExponentialBackoff<T>(
       return await operation()
     } catch (error) {
       lastError = error as Error
+
+      // If the error is non-retriable, throw it immediately
+      if (lastError instanceof NonRetriableError) {
+        throw lastError
+      }
 
       if (attempt === maxRetries) {
         throw lastError
@@ -68,11 +81,13 @@ export async function submitFeedback(
         }
       }
     )
-    if (!response.ok) {
-      throw new Error(`Failed to submit feedback: ${response.statusText}`)
-    }
     const resp = (await response.json()) as GradeResponse
     if (resp.error) {
+      if (!resp.error.recoverable) {
+        throw new NonRetriableError(
+          `Failed to submit feedback: ${resp.error.details}`
+        )
+      }
       throw new Error(
         `Failed to submit feedback: ${resp.error.message} ${resp.error.details}`
       )
@@ -95,11 +110,13 @@ export async function createSubmission(token: string) {
         }
       }
     )
-    if (!response.ok) {
-      throw new Error(`Failed to create submission: ${response.statusText}`)
-    }
     const resp = (await response.json()) as SubmissionResponse
     if (resp.error) {
+      if (!resp.error.recoverable) {
+        throw new NonRetriableError(
+          `Failed to create submission: ${resp.error.message} ${resp.error.details}`
+        )
+      }
       throw new Error(
         `Failed to create submission: ${resp.error.message} ${resp.error.details}`
       )
@@ -125,13 +142,13 @@ export async function createRegressionTestRun(
         }
       }
     )
-    if (!response.ok) {
-      throw new Error(
-        `Failed to create regression test run: ${response.statusText}`
-      )
-    }
     const resp = (await response.json()) as RegressionTestRunResponse
     if (resp.error) {
+      if (!resp.error.recoverable) {
+        throw new NonRetriableError(
+          `Failed to create regression test run: ${resp.error.message} ${resp.error.details}`
+        )
+      }
       throw new Error(
         `Failed to create regression test run: ${resp.error.message} ${resp.error.details}`
       )
