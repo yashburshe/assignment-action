@@ -204,6 +204,15 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       if (!mutantResults) {
         return [
           {
+            extra_data: {
+                  llm: JSON.stringify({
+                    prompt: "Write a haiku about the weather",
+                    model: "gpt-4o",
+                    provider: "azure",
+                    account: "its",
+                    type: "v1"
+                  })
+                },
             name: unit.name,
             output:
               mutantFailureAdvice ||
@@ -292,6 +301,15 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       }
       return [
         {
+          extra_data: {
+                  llm: JSON.stringify({
+                    prompt: "Write a haiku about the weather",
+                    model: "gpt-4o",
+                    provider: "azure",
+                    account: "its",
+                    type: "v1"
+                  })
+                },
           name: unit.name,
           output: unit.hide_output
             ? 'Output for this test is intentionally hidden.'
@@ -420,6 +438,15 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
           part.gradedUnits.map((gradedUnit) => {
             if (isRegularTestUnit(gradedUnit)) {
               return {
+                "extra_data": {
+                  "llm": JSON.stringify({
+                    "prompt": "Write a haiku about the weather",
+                    "model": "gpt-4o",
+                    "provider": "azure",
+                    "account": "its",
+                    "type": "v1"
+                  })
+                },
                 name: gradedUnit.name,
                 output:
                   'Build failed, test not run. Please see overall output for more details.',
@@ -430,6 +457,15 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
               }
             } else if (isMutationTestUnit(gradedUnit)) {
               return {
+                extra_data: {
+                  llm: JSON.stringify({
+                    prompt: "Write a haiku about the weather",
+                    model: "gpt-4o",
+                    provider: "azure",
+                    account: "its",
+                    type: "v1"
+                  })
+                },
                 name: gradedUnit.name,
                 output:
                   'Build failed, test not run. Please see overall output for more details.',
@@ -459,7 +495,9 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
         artifacts: []
       }
     }
+
     let testResults: TestResult[] = []
+
     try {
       testResults = await this.builder.test({
         timeoutSeconds:
@@ -477,6 +515,15 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
           part.gradedUnits.map((gradedUnit) => {
             if (isRegularTestUnit(gradedUnit)) {
               return {
+                extra_data: {
+                  llm: JSON.stringify({
+                    prompt: "Write a haiku about the weather",
+                    model: "gpt-4o",
+                    provider: "azure",
+                    account: "its",
+                    type: "v1"
+                  })
+                },
                 name: gradedUnit.name,
                 output:
                   'Build failed, test not run. Please see overall output for more details.',
@@ -487,6 +534,15 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
               }
             } else if (isMutationTestUnit(gradedUnit)) {
               return {
+                extra_data: {
+                  llm: JSON.stringify({
+                    prompt: "Write a haiku about the weather",
+                    model: "gpt-4o",
+                    provider: "azure",
+                    account: "its",
+                    type: "v1"
+                  })
+                },
                 name: gradedUnit.name,
                 output:
                   'Build failed, test not run. Please see overall output for more details.',
@@ -520,13 +576,19 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       this.config.submissionFiles.testFiles.length > 0 &&
       this.config.build.student_tests?.instructor_impl?.run_tests
     ) {
+
+      //logger msg
       this.logger.log(
         'visible',
         'Resetting to have student tests with the instructor solution'
       )
+
+      //reset everything fresh dir
       await this.resetSolutionFiles()
       await this.copyStudentFiles('testFiles')
       this.logger.log('visible', 'Building solution and running student tests')
+
+      // do a clean build
       try {
         await this.builder.buildClean({
           timeoutSeconds:
@@ -542,6 +604,9 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
         )
         this.logger.log('visible', msg)
       }
+
+
+      //run builder tests
       try {
         studentTestResults = await this.builder.test({
           timeoutSeconds:
@@ -556,6 +621,8 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
         )
         this.logger.log('visible', msg)
       }
+
+      // if student tests are wrong or non existent
       if (
         !studentTestResults ||
         studentTestResults.some((result) => result.status === 'fail')
@@ -586,7 +653,8 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
         }
         mutantFailureAdvice +=
           '\n\nPlease fix the above errors and resubmit for grading.'
-      } else if (
+      } // run mutation testing on student tests 
+      else if (
         this.config.build.student_tests?.instructor_impl?.run_mutation
       ) {
         this.logger.log(
@@ -624,9 +692,11 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
         }
       }
     }
+
     let studentTestAdvice: string | undefined
     let studentImplMutantResults: MutantResult[] | undefined
     let studentImplMutantFailureAdvice: string | undefined
+
     if (
       (this.config.build.student_tests?.student_impl?.report_branch_coverage ||
         this.config.build.student_tests?.student_impl?.run_tests ||
@@ -792,6 +862,15 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       }
       this.logger.log('hidden', studentImplMutationOutput)
       testFeedbacks.push({
+        extra_data: {
+                  llm: JSON.stringify({
+                    prompt: "Write a haiku about the weather",
+                    model: "gpt-4o",
+                    provider: "azure",
+                    account: "its",
+                    type: "v1"
+                  })
+                },
         name: 'Student Implementation Fault Coverage Report',
         output: studentImplMutationOutput,
         output_format: 'markdown',
