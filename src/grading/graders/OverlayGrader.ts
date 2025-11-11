@@ -405,6 +405,8 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
           artifacts: []
         }
       }
+    } else {
+      this.logger.log('visible', "Yash Burshe :- Linting passed");
     }
 
     this.logger.log(
@@ -504,6 +506,7 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
           this.config.build.timeouts_seconds?.instructor_tests ||
           DEFAULT_TIMEOUTS.instructor_tests
       })
+      this.logger.log('visible', `Yash Burshe :- Builder tests passed?\n${testResults}`);
     } catch (err) {
       this.logger.log(
         'visible',
@@ -787,10 +790,17 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
         this.gradePart(part, testResults, mutantResults, mutantFailureAdvice)
       )
       .flat()
+
     if (this.logger.isVerboseDebug) {
       console.log('DEBUG: Test results')
       console.log(JSON.stringify(testFeedbacks, null, 2))
     }
+
+    console.log('DEBUG: Test results')
+    console.log(JSON.stringify(testFeedbacks, null, 2))
+
+    this.logger.log('visible', `TEST FEEDBACKS: \n\n ${testFeedbacks}`)
+
 
     //Future graders might want to dynamically generate some artifacts, this would be the place to add them to the feedback
 
