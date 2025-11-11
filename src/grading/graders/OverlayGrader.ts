@@ -354,7 +354,7 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
         artifacts: []
       }
     }
-    this.logger.log('visible', 'Beginning grading')
+    this.logger.log('visible', 'Yash Burshe Action :- Beginning grading')
     const expectedArtifacts = this.config.build.artifacts || []
 
     const tmpDir = path.join(process.cwd(), 'pawtograder-grading')
@@ -408,6 +408,8 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
     } else {
       this.logger.log('visible', "Yash Burshe :- Linting passed");
     }
+
+    this.logger.log('visible', 'HELLO')
 
     this.logger.log(
       'visible',
