@@ -205,14 +205,14 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
         return [
           {
             extra_data: {
-              llm: JSON.stringify({
+              llm: {
                 prompt: 'Write a haiku about the weather',
                 model: 'gpt-4o',
-                provider: 'azure',
+                provider: 'azyure',
                 account: 'its',
                 type: 'v1'
-              })
-            },
+              }
+            } as unknown as any,
             name: unit.name,
             output:
               mutantFailureAdvice ||
@@ -302,14 +302,14 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       return [
         {
           extra_data: {
-            llm: JSON.stringify({
+            llm: {
               prompt: 'Write a haiku about the weather',
               model: 'gpt-4o',
-              provider: 'azure',
+              provider: 'azyure',
               account: 'its',
               type: 'v1'
-            })
-          },
+            }
+          } as unknown as any,
           name: unit.name,
           output: unit.hide_output
             ? 'Output for this test is intentionally hidden.'
@@ -436,20 +436,20 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       )
       this.logger.log('visible', msg)
       const gradedParts = this.config.gradedParts || []
-      const allTests: AutograderTestFeedback[] = gradedParts
+      const allTests = gradedParts
         .filter((part) => !part.hide_until_released)
         .map((part) =>
           part.gradedUnits.map((gradedUnit) => {
             if (isRegularTestUnit(gradedUnit)) {
               return {
                 extra_data: {
-                  llm: JSON.stringify({
+                  llm: {
                     prompt: 'Write a haiku about the weather',
                     model: 'gpt-4o',
                     provider: 'azure',
                     account: 'its',
                     type: 'v1'
-                  })
+                  }
                 },
                 name: gradedUnit.name,
                 output:
@@ -462,13 +462,13 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
             } else if (isMutationTestUnit(gradedUnit)) {
               return {
                 extra_data: {
-                  llm: JSON.stringify({
+                  llm: {
                     prompt: 'Write a haiku about the weather',
                     model: 'gpt-4o',
                     provider: 'azure',
                     account: 'its',
                     type: 'v1'
-                  })
+                  }
                 },
                 name: gradedUnit.name,
                 output:
@@ -494,7 +494,7 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
           output: 'Gradle build failed'
         },
         output: this.logger.getEachOutput(),
-        tests: allTests,
+        tests: allTests as any,
         score: 0,
         artifacts: []
       }
@@ -517,20 +517,20 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
         'visible',
         `An error occurred while running instructor tests. Please fix the above errors and resubmit for grading. Here is the error message: ${err}`
       )
-      const allTests: AutograderTestFeedback[] = gradedParts
+      const allTests = gradedParts
         .filter((part) => !part.hide_until_released)
         .map((part) =>
           part.gradedUnits.map((gradedUnit) => {
             if (isRegularTestUnit(gradedUnit)) {
               return {
                 extra_data: {
-                  llm: JSON.stringify({
+                  llm: {
                     prompt: 'Write a haiku about the weather',
                     model: 'gpt-4o',
                     provider: 'azure',
                     account: 'its',
                     type: 'v1'
-                  })
+                  }
                 },
                 name: gradedUnit.name,
                 output:
@@ -543,13 +543,13 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
             } else if (isMutationTestUnit(gradedUnit)) {
               return {
                 extra_data: {
-                  llm: JSON.stringify({
+                  llm: {
                     prompt: 'Write a haiku about the weather',
                     model: 'gpt-4o',
                     provider: 'azure',
                     account: 'its',
                     type: 'v1'
-                  })
+                  }
                 },
                 name: gradedUnit.name,
                 output:
@@ -572,7 +572,7 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       return {
         lint: lintResult,
         output: this.logger.getEachOutput(),
-        tests: allTests,
+        tests: allTests as any,
         score: 0,
         artifacts: []
       }
@@ -797,10 +797,8 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       console.log(JSON.stringify(testFeedbacks, null, 2))
     }
 
-    console.log('DEBUG: Test results')
+    console.log('DEBUG: Test results new')
     console.log(JSON.stringify(testFeedbacks, null, 2))
-
-    this.logger.log('visible', `TEST FEEDBACKS: \n\n ${testFeedbacks}`)
 
     //Future graders might want to dynamically generate some artifacts, this would be the place to add them to the feedback
 
@@ -873,14 +871,14 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       this.logger.log('hidden', studentImplMutationOutput)
       testFeedbacks.push({
         extra_data: {
-          llm: JSON.stringify({
+          llm: {
             prompt: 'Write a haiku about the weather',
             model: 'gpt-4o',
-            provider: 'azure',
+            provider: 'azyure',
             account: 'its',
             type: 'v1'
-          })
-        },
+          }
+        } as unknown as any,
         name: 'Student Implementation Fault Coverage Report',
         output: studentImplMutationOutput,
         output_format: 'markdown',
