@@ -777,6 +777,8 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
     //   max_score: 0
     // })
 
+    this.logger.log('visible', 'Adding SmeLLM Test (Feedbot Response)')
+
     testFeedbacks.push({
       extra_data: {
         llm: {
