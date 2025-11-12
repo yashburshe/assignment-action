@@ -204,15 +204,6 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       if (!mutantResults) {
         return [
           {
-            extra_data: {
-              llm: {
-                prompt: 'Write a haiku about the weather',
-                model: 'gpt-4o',
-                provider: 'azyure',
-                account: 'its',
-                type: 'v1'
-              }
-            } as unknown as any,
             name: unit.name,
             output:
               mutantFailureAdvice ||
@@ -301,15 +292,6 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       }
       return [
         {
-          extra_data: {
-            llm: {
-              prompt: 'Write a haiku about the weather',
-              model: 'gpt-4o',
-              provider: 'azyure',
-              account: 'its',
-              type: 'v1'
-            }
-          } as unknown as any,
           name: unit.name,
           output: unit.hide_output
             ? 'Output for this test is intentionally hidden.'
@@ -354,7 +336,7 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
         artifacts: []
       }
     }
-    this.logger.log('visible', 'Yash Burshe Action :- Beginning grading')
+    this.logger.log('visible', 'Beginning grading')
     const expectedArtifacts = this.config.build.artifacts || []
 
     const tmpDir = path.join(process.cwd(), 'pawtograder-grading')
@@ -406,7 +388,7 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
         }
       }
     } else {
-      this.logger.log('visible', 'Yash Burshe :- Linting passed')
+      this.logger.log('visible', 'Linting passed')
     }
 
     this.logger.log('visible', 'HELLO')
@@ -508,10 +490,6 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
           this.config.build.timeouts_seconds?.instructor_tests ||
           DEFAULT_TIMEOUTS.instructor_tests
       })
-      this.logger.log(
-        'visible',
-        `Yash Burshe :- Builder tests passed?\n${testResults}`
-      )
     } catch (err) {
       this.logger.log(
         'visible',
@@ -523,15 +501,6 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
           part.gradedUnits.map((gradedUnit) => {
             if (isRegularTestUnit(gradedUnit)) {
               return {
-                extra_data: {
-                  llm: {
-                    prompt: 'Write a haiku about the weather',
-                    model: 'gpt-4o',
-                    provider: 'azure',
-                    account: 'its',
-                    type: 'v1'
-                  }
-                },
                 name: gradedUnit.name,
                 output:
                   'Build failed, test not run. Please see overall output for more details.',
@@ -542,15 +511,6 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
               }
             } else if (isMutationTestUnit(gradedUnit)) {
               return {
-                extra_data: {
-                  llm: {
-                    prompt: 'Write a haiku about the weather',
-                    model: 'gpt-4o',
-                    provider: 'azure',
-                    account: 'its',
-                    type: 'v1'
-                  }
-                },
                 name: gradedUnit.name,
                 output:
                   'Build failed, test not run. Please see overall output for more details.',
@@ -569,6 +529,7 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
           })
         )
         .flat()
+
       return {
         lint: lintResult,
         output: this.logger.getEachOutput(),
@@ -797,8 +758,42 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       console.log(JSON.stringify(testFeedbacks, null, 2))
     }
 
-    console.log('DEBUG: Test results new')
-    console.log(JSON.stringify(testFeedbacks, null, 2))
+    // Force add SmeLLM test
+    // allTests.push({
+    //   extra_data: {
+    //     llm: {
+    //       prompt: 'Write a haiku about the weather',
+    //       model: 'gpt-4o',
+    //       provider: 'azure',
+    //       account: 'its',
+    //       type: 'v1'
+    //     }
+    //   } as unknown as any,
+    //   name: 'SmeLLM Test',
+    //   output: 'Click on Feedbot Response to get a response from SmeLLM',
+    //   output_format: 'text' as OutputFormat,
+    //   score: 0,
+    //   part: 'Student-Visible Test Results',
+    //   max_score: 0
+    // })
+
+    testFeedbacks.push({
+      extra_data: {
+        llm: {
+          prompt: 'Write a haiku about the weather',
+          model: 'gpt-4o',
+          provider: 'azure',
+          account: 'its',
+          type: 'v1'
+        }
+      } as unknown as any,
+      name: 'SmeLLM Test',
+      output: 'Click on Feedbot Response to get a response from SmeLLM',
+      output_format: 'text' as OutputFormat,
+      score: 0,
+      part: 'Student-Visible Test Results',
+      max_score: 0
+    })
 
     //Future graders might want to dynamically generate some artifacts, this would be the place to add them to the feedback
 
@@ -870,15 +865,6 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       }
       this.logger.log('hidden', studentImplMutationOutput)
       testFeedbacks.push({
-        extra_data: {
-          llm: {
-            prompt: 'Write a haiku about the weather',
-            model: 'gpt-4o',
-            provider: 'azyure',
-            account: 'its',
-            type: 'v1'
-          }
-        } as unknown as any,
         name: 'Student Implementation Fault Coverage Report',
         output: studentImplMutationOutput,
         output_format: 'markdown',
