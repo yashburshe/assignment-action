@@ -761,199 +761,180 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
     this.logger.log('visible', 'Adding SmeLLM Test(s) (Feedbot Response)')
 
     const FOWLER_CODE_SMELLS = [
-    {
-        name: "Long Method",
+      {
+        name: 'Long Method',
         treatments: [
-            "Extract Method",
-            "Replace Temp with Query",
-            "Introduce Parameter Object or Preserve Whole Object",
-            "Decompose Conditional"
+          'Extract Method',
+          'Replace Temp with Query',
+          'Introduce Parameter Object or Preserve Whole Object',
+          'Decompose Conditional'
         ]
-    },
-    {
-        name: "Large Class",
+      },
+      {
+        name: 'Large Class',
         treatments: [
-            "Extract Class",
-            "Extract Subclass",
-            "Extract Interface",
-            "Duplicate Observed Data"
+          'Extract Class',
+          'Extract Subclass',
+          'Extract Interface',
+          'Duplicate Observed Data'
         ]
-    },
-    {
-        name: "Primitive Obsession",
+      },
+      {
+        name: 'Primitive Obsession',
         treatments: [
-            "Replace Data Value with Object",
-            "Introduce Parameter Object or Preserve Whole Object",
-            "Replace Type Code with Class",
-            "Replace Type Code with Subclasses or Replace Type Code with State/Strategy",
-            "Replace Array with Object"
+          'Replace Data Value with Object',
+          'Introduce Parameter Object or Preserve Whole Object',
+          'Replace Type Code with Class',
+          'Replace Type Code with Subclasses or Replace Type Code with State/Strategy',
+          'Replace Array with Object'
         ]
-    },
-    {
-        name: "Long Parameter List",
+      },
+      {
+        name: 'Long Parameter List',
         treatments: [
-            "Replace Parameter with Method Call",
-            "Preserve Whole Object",
-            "Introduce Parameter Object"
+          'Replace Parameter with Method Call',
+          'Preserve Whole Object',
+          'Introduce Parameter Object'
         ]
-    },
-    {
-        name: "Data Clumps",
+      },
+      {
+        name: 'Data Clumps',
         treatments: [
-            "Extract Class",
-            "Introduce Parameter Object",
-            "Preserve Whole Object"
+          'Extract Class',
+          'Introduce Parameter Object',
+          'Preserve Whole Object'
         ]
-    },
-    {
-        name: "Switch Statements",
+      },
+      {
+        name: 'Switch Statements',
         treatments: [
-            "Extract Method & then Move Method",
-            "Replace Type Code with Subclasses or Replace Type Code with State/Strategy",
-            "Replace Conditional with Polymorphism",
-            "Replace Parameter with Explicit Methods",
-            "Introduce Null Object"
+          'Extract Method & then Move Method',
+          'Replace Type Code with Subclasses or Replace Type Code with State/Strategy',
+          'Replace Conditional with Polymorphism',
+          'Replace Parameter with Explicit Methods',
+          'Introduce Null Object'
         ]
-    },
-    {
-        name: "Temporary Field",
+      },
+      {
+        name: 'Temporary Field',
         treatments: [
-            "Extract Class or Replace Method with Method Object",
-            "Introduce Null Object"
+          'Extract Class or Replace Method with Method Object',
+          'Introduce Null Object'
         ]
-    },
-    {
-        name: "Refused Bequest",
+      },
+      {
+        name: 'Refused Bequest',
         treatments: [
-            "Replace Inheritance with Delegation",
-            "Extract Superclass"
+          'Replace Inheritance with Delegation',
+          'Extract Superclass'
         ]
-    },
-    {
-        name: "Alternative Classes with Different Interfaces",
+      },
+      {
+        name: 'Alternative Classes with Different Interfaces',
         treatments: [
-            "Rename Method",
-            "Move Method",
-            "Add Parameter & Parameterize Method",
-            "Extract Superclass"
+          'Rename Method',
+          'Move Method',
+          'Add Parameter & Parameterize Method',
+          'Extract Superclass'
         ]
-    },
-    {
-        name: "Divergent Change",
+      },
+      {
+        name: 'Divergent Change',
+        treatments: ['Extract Class', 'Extract Superclass & Extract Subclass']
+      },
+      {
+        name: 'Shotgun Surgery',
+        treatments: ['Move Method & Move Field', 'Inline Class']
+      },
+      {
+        name: 'Parallel Inheritance Hierarchies',
+        treatments: ['Move Method & Move Field']
+      },
+      {
+        name: 'Comments',
         treatments: [
-            "Extract Class",
-            "Extract Superclass & Extract Subclass"
+          'Extract Variable',
+          'Extract Method',
+          'Rename Method',
+          'Introduce Assertion'
         ]
-    },
-    {
-        name: "Shotgun Surgery",
+      },
+      {
+        name: 'Duplicate Code',
         treatments: [
-            "Move Method & Move Field",
-            "Inline Class"
+          'Extract Method',
+          'Extract Method & Pull Up Field',
+          'Pull Up Constructor Body',
+          'Form Template Method',
+          'Substitute Algorithm',
+          'Extract Superclass',
+          'Extract Class',
+          'Consolidate Conditional Expression and use Extract Method',
+          'Consolidate Duplicate Conditional Fragments'
         ]
-    },
-    {
-        name: "Parallel Inheritance Hierarchies",
+      },
+      {
+        name: 'Lazy Class',
+        treatments: ['Inline Class', 'Collapse Hierarchy']
+      },
+      {
+        name: 'Data Class',
         treatments: [
-            "Move Method & Move Field"
+          'Encapsulate Field',
+          'Encapsulate Collection',
+          'Move Method and Extract Method',
+          'Remove Setting Method and Hide Method'
         ]
-    },
-    {
-        name: "Comments",
+      },
+      {
+        name: 'Dead Code',
         treatments: [
-            "Extract Variable",
-            "Extract Method",
-            "Rename Method",
-            "Introduce Assertion"
+          'Remove Unused Code',
+          'Inline Class or Collapse Hierarchy',
+          'Remove Parameter'
         ]
-    },
-    {
-        name: "Duplicate Code",
+      },
+      {
+        name: 'Speculative Generality',
         treatments: [
-            "Extract Method",
-            "Extract Method & Pull Up Field",
-            "Pull Up Constructor Body",
-            "Form Template Method",
-            "Substitute Algorithm",
-            "Extract Superclass",
-            "Extract Class",
-            "Consolidate Conditional Expression and use Extract Method",
-            "Consolidate Duplicate Conditional Fragments"
+          'Collapse Hierarchy',
+          'Inline Class',
+          'Inline Method',
+          'Remove Parameter'
         ]
-    },
-    {
-        name: "Lazy Class",
+      },
+      {
+        name: 'Feature Envy',
         treatments: [
-            "Inline Class",
-            "Collapse Hierarchy"
+          'Move Method',
+          'Extract Method',
+          'Extract Method with Move Method'
         ]
-    },
-    {
-        name: "Data Class",
+      },
+      {
+        name: 'Inappropriate Intimacy',
         treatments: [
-            "Encapsulate Field",
-            "Encapsulate Collection",
-            "Move Method and Extract Method",
-            "Remove Setting Method and Hide Method"
+          'Move Method & Move Field',
+          'Extract Class & Hide Delegate',
+          'Change Bidirectional Association to Unidirectional',
+          'Replace Delegation with Inheritance'
         ]
-    },
-    {
-        name: "Dead Code",
-        treatments: [
-            "Remove Unused Code",
-            "Inline Class or Collapse Hierarchy",
-            "Remove Parameter"
-        ]
-    },
-    {
-        name: "Speculative Generality",
-        treatments: [
-            "Collapse Hierarchy",
-            "Inline Class",
-            "Inline Method",
-            "Remove Parameter"
-        ]
-    },
-    {
-        name: "Feature Envy",
-        treatments: [
-            "Move Method",
-            "Extract Method",
-            "Extract Method with Move Method"
-        ]
-    },
-    {
-        name: "Inappropriate Intimacy",
-        treatments: [
-            "Move Method & Move Field",
-            "Extract Class & Hide Delegate",
-            "Change Bidirectional Association to Unidirectional",
-            "Replace Delegation with Inheritance"
-        ]
-    },
-    {
-        name: "Message Chains",
-        treatments: [
-            "Hide Delegate",
-            "Extract Method & Move Method"
-        ]
-    },
-    {
-        name: "Middle Man",
-        treatments: [
-            "Remove Middle Man"
-        ]
-    },
-    {
-        name: "Incomplete Library Class",
-        treatments: [
-            "Introduce Foreign Method",
-            "Introduce Local Extension"
-        ]
-    }
-];
+      },
+      {
+        name: 'Message Chains',
+        treatments: ['Hide Delegate', 'Extract Method & Move Method']
+      },
+      {
+        name: 'Middle Man',
+        treatments: ['Remove Middle Man']
+      },
+      {
+        name: 'Incomplete Library Class',
+        treatments: ['Introduce Foreign Method', 'Introduce Local Extension']
+      }
+    ]
 
- const REPORT_TEMPLATE = `**Code Review: <Insert file name>**
+    const REPORT_TEMPLATE = `**Code Review: <Insert file name>**
 - Code smell no. - <index>
 - Code smell name - <Name of the code smell from the code smell list>
 - Code smell description - <Description of the code smell>
@@ -967,7 +948,9 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       template to generate the report: ${REPORT_TEMPLATE}`
 
     try {
-      const javaGlobber = await glob.create(path.join(this.gradingDir, '**', '*.java'))
+      const javaGlobber = await glob.create(
+        path.join(this.gradingDir, '**', '*.java')
+      )
       const javaFiles = await javaGlobber.glob()
       if (javaFiles.length === 0) {
         testFeedbacks.push({
@@ -1010,7 +993,10 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
         }
       }
     } catch (err) {
-      this.logger.log('visible', `Error adding SmeLLM tests: ${err instanceof Error ? err.message : String(err)}`)
+      this.logger.log(
+        'visible',
+        `Error adding SmeLLM tests: ${err instanceof Error ? err.message : String(err)}`
+      )
     }
 
     //Future graders might want to dynamically generate some artifacts, this would be the place to add them to the feedback
