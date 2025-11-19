@@ -1,6 +1,6 @@
 import * as glob from '@actions/glob'
 import * as io from '@actions/io'
-import { access, readdir } from 'fs/promises'
+import { access, readdir, readFile } from 'fs/promises'
 import { tmpdir } from 'os'
 import path from 'path'
 import { AutograderFeedback } from '../../api/adminServiceSchemas.js'
@@ -973,10 +973,16 @@ export class OverlayGrader extends Grader<OverlayPawtograderConfig> {
       } else {
         for (const file of javaFiles) {
           const rel = path.relative(this.gradingDir, file)
+          const fileContents = await readFile(file, 'utf8')
           testFeedbacks.push({
             extra_data: {
               llm: {
-                prompt: `${SYSTEM_PROMPT} Provide a SmeLLM-style feedback summary for the student-submitted Java file: ${rel}`,
+                prompt: `${SYSTEM_PROMPT} Student file (${rel}):
+\`\`\`java
+${fileContents}
+\`\`\`
+
+Provide a SmeLLM-style feedback summary for the student-submitted Java file: ${rel}`,
                 model: 'gpt-4o',
                 provider: 'azure',
                 account: 'its',
